@@ -1,0 +1,9 @@
+Testsuite: baklanov.usermanagement.UserTest
+Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0,034 sec
+
+Testcase: testGetAgeWhenDayBeforeBday took 0,008 sec
+Testcase: testGetAgeWhenDayAfterBday took 0 sec
+Testcase: getFullName took 0 sec
+Testcase: testGetAgeWhenMonthBeforeBday took 0 sec
+Testcase: testGetAge took 0 sec
+Testcase: testGetAgeWhenMonthAfterBday took 0 sec
