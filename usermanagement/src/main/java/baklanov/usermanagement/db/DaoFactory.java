@@ -1,6 +1,5 @@
 package baklanov.usermanagement.db;
 
-import baklanov.usermanagement.User;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -25,7 +24,7 @@ public class DaoFactory {
         }
     }
 
-    private ConnectionFactory getConnectionFactory() {
+    public ConnectionFactory getConnectionFactory() {
         String user = properties.getProperty("connection.user");
         String password = properties.getProperty("connection.password");
         String url = properties.getProperty("connection.url");

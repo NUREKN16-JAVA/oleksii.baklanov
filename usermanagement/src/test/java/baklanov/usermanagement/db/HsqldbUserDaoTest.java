@@ -7,21 +7,25 @@ import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.xml.XmlDataSet;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
-
+import org.junit.runners.MethodSorters;
 import java.util.Collection;
 import java.util.Date;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class HsqldbUserDaoTest extends DatabaseTestCase {
-    HsqldbUserDao dao;
+    private HsqldbUserDao dao;
     private ConnectionFactory connectionFactory;
-    private static final long ETALON_ID_USER = 5;
+    private DaoFactory daoFactory;
+    private static final long ETALON_ID_USER = 1;
     private static final String ETALON_FIRSTNAME_USER = "Test";
     private static final String ETALON_LASTNAME_USER = "Update";
 
     @Before
     public void setUp()  {
-        connectionFactory=new ConnectionFactoryImpl();
+        daoFactory=new DaoFactory();
+        connectionFactory=daoFactory.getConnectionFactory();
         dao = new HsqldbUserDao(connectionFactory);
     }
 
@@ -51,7 +55,7 @@ public class HsqldbUserDaoTest extends DatabaseTestCase {
         try {
            Collection collection = dao.findAll();
            assertNotNull("Collection is null", collection);
-           assertEquals("Collection size",2,collection.size());
+           assertEquals("Collection size",1,collection.size());
         } catch (DatabaseException e) {
             e.printStackTrace();
             fail(e.toString());
@@ -91,18 +95,14 @@ public class HsqldbUserDaoTest extends DatabaseTestCase {
     }
 
     @Test
-    public void testDelete()
+    public void testUserDelete()
     {
-        int expectedBefore = 3;
-        int expectedAfter = 2;
         try {
-            User user = dao.find(ETALON_ID_USER-1);
+            User user = dao.find(ETALON_ID_USER);
             int actualBefore = dao.findAll().size();
             dao.delete(user);
             int actualAfter = dao.findAll().size();
-
-            assertEquals(expectedBefore, actualBefore);
-            assertEquals(expectedAfter, actualAfter);
+            assertNotSame(actualBefore, actualAfter);
         } catch (DatabaseException e) {
             e.printStackTrace();
         }
@@ -111,13 +111,12 @@ public class HsqldbUserDaoTest extends DatabaseTestCase {
 
     @Override
     protected IDatabaseConnection getConnection() throws Exception {
-       connectionFactory = new ConnectionFactoryImpl();
+       connectionFactory = daoFactory.getConnectionFactory();
         return new DatabaseConnection(connectionFactory.createConnection());
     }
 
     @Override
     protected IDataSet getDataSet() throws Exception {
-        IDataSet dataSet = new XmlDataSet(getClass().getClassLoader().getResourceAsStream("..\\..usermanagement\\src\\test\\resources\\usersDataSet.xml"));
-        return dataSet;
+        return new XmlDataSet(getClass().getClassLoader().getResourceAsStream("..\\..usermanagement\\src\\test\\resources\\usersDataSet.xml"));
     }
 }
