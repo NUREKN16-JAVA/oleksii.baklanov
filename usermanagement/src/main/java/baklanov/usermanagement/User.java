@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Calendar;
 import java.util.Date;
 import  java.time.temporal.ChronoUnit;
 
@@ -13,6 +14,16 @@ public class User implements Serializable{
     private String firstName;
     private String lastName;
     private Date dateOfBirth;
+
+    public User() {
+    }
+
+    public User(Long id, String firstName, String lastName, Date dateOfBirth) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.dateOfBirth = dateOfBirth;
+    }
 
     public Long getId() {
         return id;
@@ -42,11 +53,11 @@ public class User implements Serializable{
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
+    public void setDateOfBirth(Date dateOfBir) {
+        this.dateOfBirth = dateOfBir;
     }
 
-    public String getFullName () {
+    public String getFullName() {
         return new StringBuilder(getLastName())
                 .append(", ")
                 .append(getFirstName())
