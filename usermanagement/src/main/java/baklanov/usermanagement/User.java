@@ -25,6 +25,12 @@ public class User implements Serializable{
         this.dateOfBirth = dateOfBirth;
     }
 
+    public User(String firstName, String lastName, Date now) {
+        this.firstName=firstName;
+        this.lastName=lastName;
+        this.dateOfBirth=now;
+    }
+
     public Long getId() {
         return id;
     }
@@ -68,5 +74,27 @@ public class User implements Serializable{
         LocalDate currentDate = LocalDate.now();
         LocalDate date = dateOfBirth.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         return ChronoUnit.YEARS.between(date, currentDate );
+    }
+
+    @Override
+    public int hashCode() {
+        if (this.getId()==null){
+            return 0;
+        }
+        return this.getId().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj==null){
+            return false;
+        }
+        if(this==obj){
+            return true;
+        }
+        if(this.getId()==null && ((User)obj).getId()==null){
+            return true;
+        }
+        return this.getId().equals(((User)obj).getId());
     }
 }

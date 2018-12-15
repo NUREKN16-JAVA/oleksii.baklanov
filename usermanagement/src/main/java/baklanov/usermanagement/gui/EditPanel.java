@@ -2,15 +2,17 @@ package baklanov.usermanagement.gui;
 
 import baklanov.usermanagement.User;
 import baklanov.usermanagement.db.DatabaseException;
+import baklanov.usermanagement.util.Messages;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-public class AddPanel extends JPanel implements ActionListener {
+public class EditPanel extends JPanel implements ActionListener {
 
     private final MainFrame parent;
     private JPanel buttonPanel;
@@ -21,14 +23,15 @@ public class AddPanel extends JPanel implements ActionListener {
     private JTextField lastNameField;
     private JTextField firstNameField;
     private Color bgColor= Color.WHITE;
+    User user;
 
-    public AddPanel(MainFrame parent){
+    public EditPanel(MainFrame parent){
         this.parent=parent;
         initialize();
     }
 
     private void initialize() {
-        this.setName("addPanel");
+        this.setName("editPanel");
         this.setLayout(new BorderLayout());
         this.add(getFieldPanel(),BorderLayout.NORTH);
         this.add(getButtonPanel(), BorderLayout.SOUTH);
@@ -47,7 +50,7 @@ public class AddPanel extends JPanel implements ActionListener {
     private JButton getCancelButton() {
         if (cancelButton == null){
             cancelButton = new JButton();
-            cancelButton.setText("Отмена");
+            cancelButton.setText(Messages.getString("Cancel"));
             cancelButton.setName("cancelButton");
             cancelButton.setActionCommand("cancel");
             cancelButton.addActionListener(this);
@@ -58,7 +61,7 @@ public class AddPanel extends JPanel implements ActionListener {
     private JButton getOkButton() {
         if (okButton == null){
             okButton = new JButton();
-            okButton.setText("Добавить");
+            okButton.setText(Messages.getString("Edit"));
             okButton.setName("okButton");
             okButton.setActionCommand("ok");
             okButton.addActionListener(this);
@@ -70,9 +73,9 @@ public class AddPanel extends JPanel implements ActionListener {
         if(fieldPanel==null){
             fieldPanel=new JPanel();
             fieldPanel.setLayout(new GridLayout(3,2));
-            addLabeledField(fieldPanel,"Имя", getFirstNameField());
-            addLabeledField(fieldPanel,"Фамилия", getLastNameField());
-            addLabeledField(fieldPanel,"Дата рождения", getDateOfBirthField());
+            addLabeledField(fieldPanel, Messages.getString("Name"), getFirstNameField());
+            addLabeledField(fieldPanel, Messages.getString("Surname"), getLastNameField());
+            addLabeledField(fieldPanel, Messages.getString("Date of Birth"), getDateOfBirthField());
         }
         return fieldPanel;
     }
@@ -108,12 +111,17 @@ public class AddPanel extends JPanel implements ActionListener {
         panel.add(textField);
     }
 
+    public void showEditPanel(User user) {
+        this.user = user;
+        getFirstNameField().setText(user.getFirstName());
+        getLastNameField().setText(user.getLastName());
+        DateFormat dateFormat = DateFormat.getDateInstance();
+        getDateOfBirthField().setText(dateFormat.format(user.getDateOfBirth()));
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        
         if("ok".equalsIgnoreCase(e.getActionCommand())){
-            User user=new User();
             user.setFirstName(getFirstNameField().getText());
             user.setLastName(getLastNameField().getText());
 
@@ -124,16 +132,15 @@ public class AddPanel extends JPanel implements ActionListener {
                 return;
             }
             try {
-                parent.getDao().create(user);
+                parent.getDao().update(user);
             } catch (DatabaseException e1) {
                 JOptionPane.showMessageDialog(this,e1.getMessage(),"Error",
-                                            JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.ERROR_MESSAGE);
             }
         }
         clearFields();
         this.setVisible(false);
         parent.showBrowsePanel();
-       
     }
 
     private void clearFields() {

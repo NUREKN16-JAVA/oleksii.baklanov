@@ -1,6 +1,7 @@
 package baklanov.usermanagement.gui;
 
 import baklanov.usermanagement.db.DatabaseException;
+import baklanov.usermanagement.util.Messages;
 
 import javax.swing.*;
 import java.awt.*;
@@ -44,7 +45,7 @@ public class BrowsePanel extends JPanel implements ActionListener {
     private JButton getDetailsButton() {
         if(detailsButton==null){
             detailsButton=new JButton();
-            detailsButton.setText("Детали");
+            detailsButton.setText(Messages.getString("Details"));
             detailsButton.setName("detailsButton");
             detailsButton.setActionCommand("details");
             detailsButton.addActionListener(this);
@@ -55,7 +56,7 @@ public class BrowsePanel extends JPanel implements ActionListener {
     private JButton getDeleteButton() {
         if(deleteButton==null){
             deleteButton=new JButton();
-            deleteButton.setText("Удалить");
+            deleteButton.setText(Messages.getString("Delete"));
             deleteButton.setName("deleteButton");
             deleteButton.setActionCommand("delete");
             deleteButton.addActionListener(this);
@@ -66,7 +67,7 @@ public class BrowsePanel extends JPanel implements ActionListener {
     private JButton getEditButton() {
         if(editButton==null){
             editButton=new JButton();
-            editButton.setText("Редактировать");
+            editButton.setText(Messages.getString("Edit"));
             editButton.setName("editButton");
             editButton.setActionCommand("edit");
             editButton.addActionListener(this);
@@ -77,7 +78,7 @@ public class BrowsePanel extends JPanel implements ActionListener {
     private JButton getAddButton() {
         if(addButton==null){
             addButton=new JButton();
-            addButton.setText("Добавить");
+            addButton.setText(Messages.getString("Add"));
             addButton.setName("addButton");
             addButton.setActionCommand("add");
             addButton.addActionListener(this);
@@ -119,6 +120,35 @@ public class BrowsePanel extends JPanel implements ActionListener {
         if("add".equalsIgnoreCase(actionCommand)){
             this.setVisible(false);
             parent.showAddPanel();
+        }
+        else if("edit".equalsIgnoreCase(actionCommand)){
+            Long id = (Long) userTable.getValueAt(userTable.getSelectedRow(), 0);
+            this.setVisible(false);
+            try{
+                parent.showEditPanel(parent.getDao().find(id));
+            }catch (DatabaseException e1){
+                new Exception(e1.getMessage());
+            }
+        }
+        else if("delete".equalsIgnoreCase(actionCommand)) { //$NON-NLS-1$
+            Long id=(long) userTable.getValueAt(userTable.getSelectedRow(), 0);
+            this.setVisible(false);
+            try {
+                parent.showDeletePanel(parent.getDao().find(id));
+            } catch (DatabaseException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+        }
+        else if("details".equalsIgnoreCase(actionCommand)) { //$NON-NLS-1$
+            Long id=(long) userTable.getValueAt(userTable.getSelectedRow(), 0);
+            this.setVisible(false);
+            try {
+                parent.showDetailsPanel(parent.getDao().find(id));
+            } catch (DatabaseException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
         }
     }
 }

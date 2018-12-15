@@ -1,6 +1,7 @@
 package baklanov.usermanagement.gui;
 
 import baklanov.usermanagement.User;
+import baklanov.usermanagement.util.Messages;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ import java.util.List;
 
 public class UserTableModel extends AbstractTableModel {
 
-    private static final String[] COLUMN_NAMES = {"ID", "Имя","Фамилия"};
+    private static final String[] COLUMN_NAMES = {Messages.getString("Id"), Messages.getString("Name"), Messages.getString("Surname")};
     private static final Class[] COLUMN_CLASSES = {Long.class, String.class, String.class};
     private List users;
 

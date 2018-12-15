@@ -1,7 +1,9 @@
 package baklanov.usermanagement.gui;
 
+import baklanov.usermanagement.User;
 import baklanov.usermanagement.db.DaoFactory;
 import baklanov.usermanagement.db.UserDao;
+import baklanov.usermanagement.util.Messages;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,6 +14,9 @@ public class MainFrame extends JFrame {
     private JPanel contentPanel;
     private BrowsePanel browsePanel;
     private AddPanel addPanel;
+    private EditPanel editPanel;
+    private DeletePanel deletePanel;
+    private DetailsPanel detailsPanel;
     private UserDao dao;
 
     public MainFrame(){
@@ -27,7 +32,7 @@ public class MainFrame extends JFrame {
     private void initialize() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(FRAME_WIDTH,FRAME_HEIGHT);
-        this.setTitle("Управление пользователями");
+        this.setTitle(Messages.getString("user.management"));
         this.setContentPane(getContentPanel());
     }
 
@@ -57,6 +62,20 @@ public class MainFrame extends JFrame {
         showPanel(getAddPanel());
     }
 
+    public void showEditPanel(User user) {
+        EditPanel editPanel= getEditPanel();
+        editPanel.showEditPanel(user);
+        showPanel(getEditPanel());
+    }
+
+    public void showDeletePanel(User user) {
+        DeletePanel deletePanel= getDeletePanel();
+        deletePanel.showDeletePanel(user);
+        showPanel(getDeletePanel());
+    }
+
+
+
     private void showPanel(JPanel panel) {
         getContentPanel().add(panel,BorderLayout.CENTER);
         panel.setVisible(true);
@@ -70,7 +89,39 @@ public class MainFrame extends JFrame {
         return addPanel;
     }
 
+    private EditPanel getEditPanel() {
+        if(editPanel==null){
+            editPanel=new EditPanel(this);
+        }
+        return editPanel;
+    }
+
+    private DeletePanel getDeletePanel() {
+        if(deletePanel==null){
+            deletePanel=new DeletePanel(this);
+        }
+        return deletePanel;
+    }
+
+
     public void showBrowsePanel() {
         showPanel(getBrowsePanel());
     }
+
+    public void showDetailsPanel(User user) {
+        DetailsPanel detailsPanel = getDetailsPanel();
+        detailsPanel.showDetailsPanel(user);
+        this.showPanel(getDetailsPanel());
+    }
+
+
+
+    public DetailsPanel getDetailsPanel() {
+        if (detailsPanel == null) {
+            detailsPanel = new DetailsPanel(this);
+
+        }
+        return detailsPanel;
+    }
+
 }
