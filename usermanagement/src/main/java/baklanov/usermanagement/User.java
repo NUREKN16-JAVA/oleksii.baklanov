@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Calendar;
 import java.util.Date;
 import  java.time.temporal.ChronoUnit;
 
@@ -13,6 +14,22 @@ public class User implements Serializable{
     private String firstName;
     private String lastName;
     private Date dateOfBirth;
+
+    public User() {
+    }
+
+    public User(Long id, String firstName, String lastName, Date dateOfBirth) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public User(String firstName, String lastName, Date now) {
+        this.firstName=firstName;
+        this.lastName=lastName;
+        this.dateOfBirth=now;
+    }
 
     public Long getId() {
         return id;
@@ -42,11 +59,11 @@ public class User implements Serializable{
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
+    public void setDateOfBirth(Date dateOfBir) {
+        this.dateOfBirth = dateOfBir;
     }
 
-    public String getFullName () {
+    public String getFullName() {
         return new StringBuilder(getLastName())
                 .append(", ")
                 .append(getFirstName())
@@ -57,5 +74,27 @@ public class User implements Serializable{
         LocalDate currentDate = LocalDate.now();
         LocalDate date = dateOfBirth.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         return ChronoUnit.YEARS.between(date, currentDate );
+    }
+
+    @Override
+    public int hashCode() {
+        if (this.getId()==null){
+            return 0;
+        }
+        return this.getId().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj==null){
+            return false;
+        }
+        if(this==obj){
+            return true;
+        }
+        if(this.getId()==null && ((User)obj).getId()==null){
+            return true;
+        }
+        return this.getId().equals(((User)obj).getId());
     }
 }
